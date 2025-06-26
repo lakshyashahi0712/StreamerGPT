@@ -1,9 +1,14 @@
-import { signOut } from "firebase/auth";
+import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "../utils/firebase";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { adduser, removeuser } from "../utils/userSlice";
+import { LOGO } from "../utils/constants.jsX";
+import { USER_AVATAR } from "../utils/constants.jsX";
 
 const Header = ()=>{
+  const dispatch = useDispatch();
 
     const navigate = useNavigate();
     const user = useSelector((store)=>store.user)
@@ -11,18 +16,40 @@ const Header = ()=>{
         
 
         signOut(auth).then(() => {
-            navigate("/")
+
           }).catch((error) => {
             navigate("/error")
           });
           
     }
+ useEffect(() => {
+
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            if (user) {
+               //user signed in
+                const {uid, email,displayName} = user;
+                dispatch(adduser({uid:uid,email:email,displayName:displayName}))
+                navigate("/browse")
+                
+            } else {
+                // User is signed out
+                dispatch(removeuser())
+                navigate("/")
+               
+            }
+        });
+
+        //unsubscribe when componenet unmounts
+        return ()=> unsubscribe();
+    }, [])
+
+
     return(
         <div className="absolute w-screen px-8 py-2 bg-gradient-to-b from-black z-10 flex justify-between items-center">
         {/* Left Component */}
         <img
           className="w-44"
-          src="https://help.nflxext.com/helpcenter/OneTrust/oneTrust_production/consent/87b6a5c0-0104-4e96-a291-092c11350111/01938dc4-59b3-7bbc-b635-c4131030e85f/logos/dd6b162f-1a32-456a-9cfe-897231c7763c/4345ea78-053c-46d2-b11e-09adaef973dc/Netflix_Logo_PMS.png"
+          src={LOGO}
           alt="Netflix Logo"
         />
       
@@ -31,7 +58,7 @@ const Header = ()=>{
              <div className="flex items-center gap-4">
           <img
             className="w-10 h-10  object-cover"
-            src="https://wallpapers.com/images/hd/netflix-profile-pictures-5yup5hd2i60x7ew3.jpg"
+            src={USER_AVATAR}
             alt="user-icon"
           />
           <button className="text-white hover:underline " onClick={handleSignOut}>(Sign Out)</button>

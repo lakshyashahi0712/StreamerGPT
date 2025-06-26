@@ -4,16 +4,16 @@ import Header from "./Header";
 import { checkValidData } from "../utils/validate";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from "../utils/firebase";
-import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { adduser } from "../utils/userSlice";
+import { USER_AVATAR } from "../utils/constants.jsX";
+import { BG_IMG } from "../utils/constants.jsX";
 
 
 
 const Login = () => {
     const [isSignInForm, setIsSignInForm] = useState(true);
     const [errorMessage, setErrorMessage] = useState(null);
-    const navigate = useNavigate();
     const dispatch = useDispatch();
 
 
@@ -46,12 +46,11 @@ const Login = () => {
                     // Signed up 
                     const user = userCredential.user;
                     updateProfile(user, {
-                        displayName: name.current.value, photoURL: "https://media.licdn.com/dms/image/v2/D4E03AQEvEWcyU1uHLg/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1730020411034?e=1752105600&v=beta&t=GptmbsBMfWKQXqXM5cAVUpeI5yfhsUl34hRga3KdRnM"
+                        displayName: name.current.value, photoURL: {USER_AVATAR}
                     }).then(() => {
                         const { uid, email, displayName } = auth.currentUser;
                         dispatch(adduser({ uid: uid, email: email, displayName: displayName }))
 
-                        navigate("/browse");
                         // ...
                     }).catch((error) => {
                         setErrorMessage(error.message)
@@ -74,8 +73,6 @@ const Login = () => {
             signInWithEmailAndPassword(auth, email.current.value, password.current.value)
                 .then((userCredential) => {
                     const user = userCredential.user;
-                    console.log(user);
-                    navigate("/browse");
                 })
                 .catch((error) => {
                     const errorCode = error.code;
@@ -92,7 +89,7 @@ const Login = () => {
         <div>
             <Header />
             <div className="absolute">
-                <img src="https://assets.nflxext.com/ffe/siteui/vlv3/39cd71fa-e2b4-49f1-aa5e-b93602b28c59/web/IN-en-20250428-TRIFECTA-perspective_760c6d52-3da5-44d7-bb30-ad2920b7021a_large.jpg" alt="bg-image" />
+                <img src={BG_IMG} alt="bg-image" />
             </div>
             <form onSubmit={handleFormSubmit} className="absolute p-12 w-3/12 my-36 mx-auto right-0 left-0 bg-black/75 rounded-lg">
                 <h1 className="text-white text-4xl font-bold">
