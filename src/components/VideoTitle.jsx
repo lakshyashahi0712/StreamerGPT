@@ -4,9 +4,9 @@ import { FaPlay } from "react-icons/fa";
 
 const VideoTitle = ({title,overview}) => {
   return (
-    <div className='h-screen w-full overflow-hidden aspect-video pt-[17%] px-[6%] absolute text-white bg-gradient-to-r from-gray-950'>
+    <div className=' w-screen overflow-x-hidden aspect-video pt-[18%] px-[6%] absolute text-white bg-gradient-to-r from-gray-950'>
       <h1 className='text-6xl font-bold w-1/2'>{title}</h1>
-      <p className='py-6 text-lg w-1/3'>{overview}</p>
+      <p className='py-2 text-lg w-3/4'>{overview}</p>
       <div className='gap-2.5 flex'>
        <button className='flex items-center gap-2 bg-white text-black font-semibold p-4 px-12 text-2xl rounded-md hover:opacity-80  cursor-pointer'>
   <FaPlay />
