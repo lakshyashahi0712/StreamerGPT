@@ -8,7 +8,7 @@ export const API_OPTIONS = {
   method: 'GET',
   headers: {
     accept: 'application/json',
-    Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJjODA4NDMxYWUzNGI4ZmQxMTk1NzI5ZWM0MmRhZmMyMiIsIm5iZiI6MTc1MDg2NzMzOC4yOSwic3ViIjoiNjg1YzFkOGE2MDQ3MTUxMmUyOTRlNDA4Iiwic2NvcGVzIjpbImFwaV9yZWFkIl0sInZlcnNpb24iOjF9.T18BRAbwx3pY497lurItAEQqJ7Majbcbyy4pS06HSIA'
+    Authorization: 'Bearer' + import.meta.env.VITE_TMDB_KEY
   }
 };
 
@@ -19,3 +19,8 @@ export const SUPPORTED_LANGUAGES = [{identifier:"en",name:"English"},
   {identifier:"hindi",name:"Hindi"},
   {identifier:"spanish",name:"Spanish"}
 ]
+
+
+
+
+export const API_KEY = import.meta.env.VITE_API_KEY

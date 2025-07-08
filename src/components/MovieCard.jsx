@@ -2,6 +2,7 @@ import React from 'react'
 import { IMG_CDN_URL } from '../utils/constants.jsX'
 
 const MovieCard = ({ posterPath }) => {
+  if(!posterPath) return null;
   return (
     <div className="min-w-[130px] md:min-w-[150px] lg:min-w-[170px] rounded overflow-hidden">
       <img
