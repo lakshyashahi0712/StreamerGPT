@@ -14,5 +14,4 @@ const MovieCard = ({ posterPath }) => {
   );
 };
 
-
 export default MovieCard
