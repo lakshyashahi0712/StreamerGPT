@@ -1,5 +1,5 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { API_KEY } from "./constants.jsX"; // your existing constant
+import { API_KEY } from "./constants.jsx"; // your existing constant
 
 const genAI = new GoogleGenerativeAI(API_KEY);
 

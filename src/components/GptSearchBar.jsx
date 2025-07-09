@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import lang from '../utils/languageConstants';
 import { useDispatch, useSelector } from 'react-redux';
 import { getGeminiResponse } from '../utils/gemini';
-import { API_OPTIONS } from '../utils/constants.jsX';
+import { API_OPTIONS } from '../utils/constants.jsx';
 import { addGptMovieResult } from '../utils/gptSlice';
 
 const GptSearchBar = () => {

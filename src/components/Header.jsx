@@ -4,10 +4,10 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { adduser, removeuser } from "../utils/userSlice";
-import { LOGO } from "../utils/constants.jsX";
-import { USER_AVATAR } from "../utils/constants.jsX";
+import { LOGO } from "../utils/constants.jsx";
+import { USER_AVATAR } from "../utils/constants.jsx";
 import { toggleGptSearchView } from "../utils/gptSlice";
-import { SUPPORTED_LANGUAGES } from "../utils/constants.jsX";
+import { SUPPORTED_LANGUAGES } from "../utils/constants.jsx";
 import { changeLanguage } from "../utils/configSlice";
 
 const Header = ()=>{
