@@ -6,9 +6,9 @@ import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfi
 import { auth } from "../utils/firebase";
 import { useDispatch } from "react-redux";
 import { adduser } from "../utils/userSlice";
-import { USER_AVATAR } from "../utils/constants.jsx";
-import { BG_IMG } from "../utils/constants.jsx";
-import { getFirebaseAuthErrorMessage } from "../utils/constants.jsx";
+import { USER_AVATAR } from "../utils/constants";
+import { BG_IMG } from "../utils/constants";
+import { getFirebaseAuthErrorMessage } from "../utils/constants";
 
 
 

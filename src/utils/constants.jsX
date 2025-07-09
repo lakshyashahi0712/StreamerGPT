@@ -4,13 +4,20 @@ export const USER_AVATAR = "https://wallpapers.com/images/hd/netflix-profile-pic
 
 export const BG_IMG = "https://assets.nflxext.com/ffe/siteui/vlv3/39cd71fa-e2b4-49f1-aa5e-b93602b28c59/web/IN-en-20250428-TRIFECTA-perspective_760c6d52-3da5-44d7-bb30-ad2920b7021a_large.jpg"
 
+const TMDB_KEY = import.meta.env.VITE_TMDB_KEY;
+
+if (!TMDB_KEY) {
+  throw new Error('❌ Missing TMDB API key! Set VITE_TMDB_KEY in your environment.');
+}
+
 export const API_OPTIONS = {
   method: 'GET',
   headers: {
     accept: 'application/json',
-    Authorization: 'Bearer ' + import.meta.env.VITE_TMDB_KEY
+    Authorization: `Bearer ${TMDB_KEY}`
   }
 };
+
 
 export const IMG_CDN_URL = "https://image.tmdb.org/t/p/w500"
 

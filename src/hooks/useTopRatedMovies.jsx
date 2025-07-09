@@ -1,4 +1,4 @@
-import { API_OPTIONS } from '../utils/constants.jsx'
+import { API_OPTIONS } from '../utils/constants'
 import { useDispatch, useSelector } from 'react-redux'
 import { addTopRatedMovies } from '../utils/moviesSlice'
 import { useEffect } from 'react'
