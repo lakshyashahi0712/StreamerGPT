@@ -21,6 +21,33 @@ export const SUPPORTED_LANGUAGES = [{identifier:"en",name:"English"},
 ]
 
 
+export const getFirebaseAuthErrorMessage = (errorCode) => {
+  console.log("Mapping Firebase errorCode:", errorCode);
+  switch (errorCode) {
+    case 'auth/email-already-in-use':
+      return 'This email is already in use. Try logging in instead.';
+    case 'auth/invalid-email':
+      return 'Please enter a valid email address.';
+    case 'auth/user-not-found':
+      return 'No account found with this email.';
+    case 'auth/wrong-password':
+      return 'Incorrect password. Please try again.';
+    case 'auth/invalid-credential':
+      return 'Invalid email or password. Please try again.';
+    case 'auth/weak-password':
+      return 'Password should be at least 6 characters.';
+    case 'auth/network-request-failed':
+      return 'Network error. Please check your internet connection.';
+    case 'auth/too-many-requests':
+      return 'Too many failed attempts. Try again later.';
+    default:
+      return `Unexpected error. Please try again.`;
+  }
+};
+
+
+
+
 
 
 export const API_KEY = import.meta.env.VITE_API_KEY

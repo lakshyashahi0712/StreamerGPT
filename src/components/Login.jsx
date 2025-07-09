@@ -8,6 +8,7 @@ import { useDispatch } from "react-redux";
 import { adduser } from "../utils/userSlice";
 import { USER_AVATAR } from "../utils/constants.jsX";
 import { BG_IMG } from "../utils/constants.jsX";
+import { getFirebaseAuthErrorMessage } from "../utils/constants.jsX";
 
 
 
@@ -15,6 +16,14 @@ const Login = () => {
     const [isSignInForm, setIsSignInForm] = useState(true);
     const [errorMessage, setErrorMessage] = useState(null);
     const dispatch = useDispatch();
+
+    const showErrorMessage = (message) => {
+  setErrorMessage(message);
+  setTimeout(() => {
+    setErrorMessage(null);
+  }, 5000);  // 5 seconds
+};
+
 
 
     const toggleSignInForm = () => {
@@ -35,7 +44,8 @@ const Login = () => {
 
         // console.log(email)
         // console.log(password)
-        setErrorMessage(message)
+        showErrorMessage(message)
+        
 
 
         if (!isSignInForm) {
@@ -53,16 +63,16 @@ const Login = () => {
 
                         // ...
                     }).catch((error) => {
-                        setErrorMessage(error.message)
+                        showErrorMessage(error.message)
                     });
 
 
                 })
                 .catch((error) => {
-                    const errorCode = error.code;
-                    const errorMessage = error.message;
-                    setErrorMessage(errorCode + "-" + errorMessage)
-                });
+  const errorCode = error.code;
+  const errorMessage = getFirebaseAuthErrorMessage(errorCode);
+  showErrorMessage(errorMessage);
+});
 
 
 
@@ -74,13 +84,11 @@ const Login = () => {
                 .then((userCredential) => {
                     const user = userCredential.user;
                 })
-                .catch((error) => {
-                    const errorCode = error.code;
-                    const errorMessage = error.message;
-                    console.log(error.message);
-                    setErrorMessage(errorCode + "-" + errorMessage)
-                });
-
+                 .catch((error) => {
+  const errorCode = error.code;
+  const errorMessage = getFirebaseAuthErrorMessage(errorCode);
+  showErrorMessage(errorMessage);
+});
 
         }
     }
