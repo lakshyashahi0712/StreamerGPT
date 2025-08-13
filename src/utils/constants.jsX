@@ -4,27 +4,31 @@ export const USER_AVATAR = "https://wallpapers.com/images/hd/netflix-profile-pic
 
 export const BG_IMG = "https://assets.nflxext.com/ffe/siteui/vlv3/39cd71fa-e2b4-49f1-aa5e-b93602b28c59/web/IN-en-20250428-TRIFECTA-perspective_760c6d52-3da5-44d7-bb30-ad2920b7021a_large.jpg"
 
-const TMDB_KEY = import.meta.env.VITE_TMDB_KEY;
+// Watchmode API configuration
+const WATCHMODE_API_KEY = import.meta.env.VITE_WATCHMODE_API_KEY;
 
-if (!TMDB_KEY) {
-  throw new Error('❌ Missing TMDB API key! Set VITE_TMDB_KEY in your environment.');
+if (!WATCHMODE_API_KEY) {
+  throw new Error('❌ Missing Watchmode API key! Set VITE_WATCHMODE_API_KEY in your environment.');
 }
 
-export const API_OPTIONS = {
+// Watchmode API base URL
+export const WATCHMODE_BASE_URL = "https://api.watchmode.com/v1";
+
+// Watchmode API headers (API key is passed as query parameter)
+export const WATCHMODE_API_OPTIONS = {
   method: 'GET',
   headers: {
-    accept: 'application/json',
-    Authorization: `Bearer ${TMDB_KEY}`
+    'Accept': 'application/json',
   }
 }
-export const IMG_CDN_URL = "https://image.tmdb.org/t/p/w500"
 
+// Watchmode image URLs - they provide poster and backdrop URLs directly
+export const WATCHMODE_IMG_BASE_URL = "https://cdn.watchmode.com"
 
 export const SUPPORTED_LANGUAGES = [{identifier:"en",name:"English"},
   {identifier:"hindi",name:"Hindi"},
   {identifier:"spanish",name:"Spanish"}
 ]
-
 
 export const getFirebaseAuthErrorMessage = (errorCode) => {
   console.log("Mapping Firebase errorCode:", errorCode);
@@ -50,9 +54,19 @@ export const getFirebaseAuthErrorMessage = (errorCode) => {
   }
 };
 
-
-
-
-
+// Helper function to build Watchmode API URLs with API key
+export const buildWatchmodeURL = (endpoint, params = {}) => {
+  const url = new URL(`${WATCHMODE_BASE_URL}${endpoint}`);
+  url.searchParams.append('apiKey', WATCHMODE_API_KEY);
+  
+  // Add additional parameters
+  Object.entries(params).forEach(([key, value]) => {
+    if (value !== null && value !== undefined) {
+      url.searchParams.append(key, value);
+    }
+  });
+  
+  return url.toString();
+};
 
 export const API_KEY = import.meta.env.VITE_API_KEY

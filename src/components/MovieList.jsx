@@ -40,6 +40,7 @@ const MovieList = ({ title, movies }) => {
             <MovieCard
               key={movie.id}
               posterPath={movie.poster_path || ""}
+              movie={movie}
             />
           ))}
         </div>

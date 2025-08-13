@@ -1,28 +1,58 @@
 import { useDispatch, useSelector } from "react-redux";
-import { API_OPTIONS } from '../utils/constants'
+import { buildWatchmodeURL, WATCHMODE_API_OPTIONS } from '../utils/constants'
 import { addTrailerVideo } from "../utils/moviesSlice";
 import { useEffect } from "react";
 
-const useMovieTrailer = (movieId)=>{
+const useMovieTrailer = (movieId) => {
+  const dispatch = useDispatch();
+  const trailerVideo = useSelector(store => store.movies.trailerVideo);
 
-
-    const dispatch = useDispatch();
-         const trailerVideo  = useSelector(store=>store.movies.trailerVideo);
-
-      const getMovieVideos = async () => {
-        const data = await fetch("https://api.themoviedb.org/3/movie/"+movieId+"/videos?language=en-US", API_OPTIONS);
-        const json = await data.json()
-        //console.log(json)
-    
-        const filterData = json.results.filter(video => video.type === "Trailer");
-        const trailer = filterData.length ? filterData[0] : json.results[0];
-       // console.log(trailer);
-    
-        dispatch(addTrailerVideo(trailer))
+  const getMovieTrailer = async () => {
+    try {
+      // Get movie details from Watchmode
+      const detailsUrl = buildWatchmodeURL(`/title/${movieId}/details`);
+      const detailsData = await fetch(detailsUrl, WATCHMODE_API_OPTIONS);
+      const detailsJson = await detailsData.json();
+      
+      // Watchmode provides trailer URLs in the details response
+      if (detailsJson.trailer) {
+        // Extract YouTube video ID from the trailer URL
+        const youtubeUrl = detailsJson.trailer;
+        let videoId = null;
+        
+        // Extract video ID from various YouTube URL formats
+        const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+        const match = youtubeUrl.match(regExp);
+        
+        if (match && match[2].length === 11) {
+          videoId = match[2];
+        }
+        
+        if (videoId) {
+          const trailer = {
+            key: videoId,
+            name: `${detailsJson.title} Trailer`,
+            site: "YouTube",
+            type: "Trailer",
+            official: true
+          };
+          
+          dispatch(addTrailerVideo(trailer));
+        } else {
+          dispatch(addTrailerVideo(null));
+        }
+      } else {
+        dispatch(addTrailerVideo(null));
       }
-      useEffect(() => {
-        if(!trailerVideo)  getMovieVideos();
-      }, []);
+    } catch (error) {
+      console.error('Error fetching movie trailer:', error);
+      dispatch(addTrailerVideo(null));
+    }
+  }
+
+  useEffect(() => {
+    if (!trailerVideo && movieId) getMovieTrailer();
+  }, [movieId]);
 }
 
-export default useMovieTrailer
+export default useMovieTrailer;

@@ -10,86 +10,75 @@ import { USER_AVATAR } from "../utils/constants";
 import { BG_IMG } from "../utils/constants";
 import { getFirebaseAuthErrorMessage } from "../utils/constants";
 
-
-
 const Login = () => {
     const [isSignInForm, setIsSignInForm] = useState(true);
     const [errorMessage, setErrorMessage] = useState(null);
     const dispatch = useDispatch();
 
     const showErrorMessage = (message) => {
-  setErrorMessage(message);
-  setTimeout(() => {
-    setErrorMessage(null);
-  }, 5000);  // 5 seconds
-};
-
-
+        setErrorMessage(message);
+        setTimeout(() => {
+            setErrorMessage(null);
+        }, 5000);  // 5 seconds
+    };
 
     const toggleSignInForm = () => {
         setIsSignInForm(!isSignInForm);
+        setErrorMessage(null); // Clear error when switching forms
     }
+
     const handleFormSubmit = (e) => {
         e.preventDefault(); // ✅ stops page reload
-        // Logic for Sign In or Sign Up goes here
+        handleButtonClick(); // Trigger the button click logic
     };
 
     const email = useRef(null);
     const password = useRef(null);
     const name = useRef(null);
 
-
     const handleButtonClick = () => {
-        const message = checkValidData(email.current.value, password.current.value)
+        const message = checkValidData(email.current.value, password.current.value);
 
-        // console.log(email)
-        // console.log(password)
-        showErrorMessage(message)
-        
-
+        // If validation fails, show error and return
+        if (message) {
+            showErrorMessage(message);
+            return;
+        }
 
         if (!isSignInForm) {
             //sign up logic
-
             createUserWithEmailAndPassword(auth, email.current.value, password.current.value)
                 .then((userCredential) => {
                     // Signed up 
                     const user = userCredential.user;
                     updateProfile(user, {
-                        displayName: name.current.value, photoURL: {USER_AVATAR}
+                        displayName: name.current.value, 
+                        photoURL: USER_AVATAR
                     }).then(() => {
                         const { uid, email, displayName } = auth.currentUser;
-                        dispatch(adduser({ uid: uid, email: email, displayName: displayName }))
-
-                        // ...
+                        dispatch(adduser({ uid: uid, email: email, displayName: displayName }));
                     }).catch((error) => {
-                        showErrorMessage(error.message)
+                        showErrorMessage(error.message);
                     });
-
-
                 })
                 .catch((error) => {
-  const errorCode = error.code;
-  const errorMessage = getFirebaseAuthErrorMessage(errorCode);
-  showErrorMessage(errorMessage);
-});
-
-
-
-        }
-        else {
+                    const errorCode = error.code;
+                    const errorMessage = getFirebaseAuthErrorMessage(errorCode);
+                    showErrorMessage(errorMessage);
+                });
+        } else {
             //sign in logic
-
             signInWithEmailAndPassword(auth, email.current.value, password.current.value)
                 .then((userCredential) => {
                     const user = userCredential.user;
+                    const { uid, email, displayName } = user;
+                    dispatch(adduser({ uid: uid, email: email, displayName: displayName }));
                 })
-                 .catch((error) => {
-  const errorCode = error.code;
-  const errorMessage = getFirebaseAuthErrorMessage(errorCode);
-  showErrorMessage(errorMessage);
-});
-
+                .catch((error) => {
+                    const errorCode = error.code;
+                    const errorMessage = getFirebaseAuthErrorMessage(errorCode);
+                    showErrorMessage(errorMessage);
+                });
         }
     }
 
@@ -104,12 +93,15 @@ const Login = () => {
                     {isSignInForm ? "Sign In" : "Sign Up"}
                 </h1>
                 {!isSignInForm && (<input ref={name} type="text" placeholder="Full Name" className="p-2 mb-3 mt-11 bg-gray-200 w-11/12 rounded-lg" />)}
-                <input ref={email} type="text" placeholder="Email Address" className="p-2 mb-3 mt-3 bg-gray-200 w-11/12 h-2/12 rounded-lg" />
+                <input ref={email} type="email" placeholder="Email Address" className="p-2 mb-3 mt-3 bg-gray-200 w-11/12 h-2/12 rounded-lg" />
                 <input ref={password} type="password" placeholder="Password" className="p-2 mb-3 mt-3 bg-gray-200 w-11/12 rounded-lg" />
                 <p className="text-red-600 font-bold text-lg py-2">{errorMessage}</p>
-                <button className="p-4 mb-3 mt-3 w-11/12 bg-red-600 font-extrabold text-white rounded-lg" onClick={handleButtonClick}>{isSignInForm ? "Sign In" : "Sign Up"}</button>
+                <button type="submit" className="p-4 mb-3 mt-3 w-11/12 bg-red-600 font-extrabold text-white rounded-lg">
+                    {isSignInForm ? "Sign In" : "Sign Up"}
+                </button>
                 <p className="text-white py-4 cursor-pointer" onClick={toggleSignInForm}>
-                    {isSignInForm ? "New to Netflix ? Sign Up Now" : "Already a User ? Sign In now"}</p>
+                    {isSignInForm ? "New to Netflix ? Sign Up Now" : "Already a User ? Sign In now"}
+                </p>
             </form>
         </div>
     )
